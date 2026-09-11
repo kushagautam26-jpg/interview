@@ -1,0 +1,1446 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepTalk — AI Mock Interview</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #07111f;
+    --panel: rgba(15, 29, 48, .82);
+    --panel2: rgba(20, 38, 61, .72);
+    --border: rgba(255,255,255,.09);
+    --text: #eef6ff;
+    --muted: #8ea5bd;
+    --cyan: #38d9ff;
+    --teal: #27e0b2;
+    --blue: #5d7cff;
+    --purple: #9c6cff;
+    --danger: #ff6680;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(56,217,255,.13), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(156,108,255,.12), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(39,224,178,.08), transparent 35%),
+        var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+    overflow-x: hidden;
+}
+
+/* Background animation */
+
+.bg-orb {
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .15;
+    pointer-events: none;
+    animation: float 10s infinite alternate ease-in-out;
+}
+
+.orb1 {
+    background: var(--cyan);
+    left: -150px;
+    top: 25%;
+}
+
+.orb2 {
+    background: var(--purple);
+    right: -150px;
+    bottom: 10%;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+    from { transform: translateY(-30px) scale(1); }
+    to { transform: translateY(50px) scale(1.15); }
+}
+
+/* NAV */
+
+nav {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    border-bottom: 1px solid var(--border);
+    background: rgba(5,15,28,.65);
+    backdrop-filter: blur(18px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
+
+.logo span {
+    color: var(--cyan);
+}
+
+.nav-right {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.badge {
+    padding: 8px 13px;
+    border-radius: 30px;
+    background: rgba(56,217,255,.09);
+    border: 1px solid rgba(56,217,255,.18);
+    color: var(--cyan);
+    font-size: 12px;
+}
+
+/* MAIN */
+
+.container {
+    width: min(1400px, 92%);
+    margin: 35px auto;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -1.8px;
+}
+
+.hero h1 span {
+    background: linear-gradient(90deg, var(--cyan), var(--teal));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: var(--muted);
+    margin-top: 10px;
+    max-width: 620px;
+    line-height: 1.6;
+}
+
+/* GRID */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 250px 1fr 290px;
+    gap: 18px;
+}
+
+.card {
+    background: linear-gradient(
+        145deg,
+        rgba(18,34,54,.88),
+        rgba(8,20,35,.78)
+    );
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    backdrop-filter: blur(18px);
+}
+
+.card-title {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mode-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.025);
+    color: var(--muted);
+    text-align: left;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.mode-btn:hover,
+.mode-btn.active {
+    color: white;
+    border-color: rgba(56,217,255,.45);
+    background: linear-gradient(
+        100deg,
+        rgba(56,217,255,.12),
+        rgba(39,224,178,.05)
+    );
+    transform: translateX(3px);
+}
+
+.mode-icon {
+    font-size: 21px;
+    margin-bottom: 7px;
+    display: block;
+}
+
+.mode-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.mode-desc {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #7189a1;
+}
+
+/* INTERVIEW */
+
+.interview {
+    min-height: 650px;
+    position: relative;
+    overflow: hidden;
+}
+
+.interview-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.live {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--teal);
+    font-size: 12px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 15px var(--teal);
+    animation: pulse 1.3s infinite;
+}
+
+@keyframes pulse {
+    50% { transform: scale(1.5); opacity: .5; }
+}
+
+.timer {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.interviewer {
+    text-align: center;
+    padding: 28px 10px 15px;
+}
+
+.avatar {
+    width: 105px;
+    height: 105px;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    background:
+        radial-gradient(circle at 35% 30%, #6deaff, #4d6eff 55%, #30226d);
+    box-shadow:
+        0 0 0 9px rgba(56,217,255,.035),
+        0 0 45px rgba(56,217,255,.25);
+    animation: avatarFloat 4s ease-in-out infinite;
+}
+
+@keyframes avatarFloat {
+    50% { transform: translateY(-7px); }
+}
+
+.persona {
+    margin-top: 13px;
+    font-weight: 700;
+}
+
+.persona small {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.question {
+    max-width: 720px;
+    margin: 25px auto;
+    text-align: center;
+    font-size: clamp(20px, 3vw, 29px);
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+/* WAVEFORM */
+
+.wave-wrap {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 5px auto;
+}
+
+.bar {
+    width: 5px;
+    height: 12px;
+    border-radius: 10px;
+    background: linear-gradient(var(--cyan), var(--teal));
+    transition: height .12s;
+    opacity: .75;
+}
+
+.listening .bar {
+    animation: wave .75s infinite ease-in-out;
+}
+
+.bar:nth-child(2n) { animation-delay: .1s; }
+.bar:nth-child(3n) { animation-delay: .2s; }
+.bar:nth-child(4n) { animation-delay: .3s; }
+
+@keyframes wave {
+    50% { height: 70px; opacity: 1; }
+}
+
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 13px;
+    margin-top: 15px;
+}
+
+.mic-btn {
+    width: 72px;
+    height: 72px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 27px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #27d9d0, #496cff);
+    box-shadow: 0 10px 40px rgba(56,217,255,.25);
+    transition: .25s;
+}
+
+.mic-btn:hover {
+    transform: scale(1.07);
+}
+
+.mic-btn.recording {
+    background: linear-gradient(135deg, #ff5f78, #ff875f);
+    box-shadow: 0 0 45px rgba(255,95,120,.35);
+    animation: recordingPulse 1s infinite;
+}
+
+@keyframes recordingPulse {
+    50% { box-shadow: 0 0 0 13px rgba(255,95,120,.06), 0 0 45px rgba(255,95,120,.4); }
+}
+
+.control-btn {
+    padding: 13px 18px;
+    background: rgba(255,255,255,.05);
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* STATUS */
+
+.status {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+/* METRICS */
+
+.metrics {
+    display: grid;
+    gap: 14px;
+}
+
+.metric {
+    padding: 14px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.025);
+}
+
+.metric-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.metric-head span:last-child {
+    color: var(--cyan);
+    font-weight: 700;
+}
+
+.progress {
+    height: 6px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.07);
+    overflow: hidden;
+}
+
+.progress i {
+    display: block;
+    height: 100%;
+    width: 50%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--cyan), var(--teal));
+    transition: width 1s ease;
+}
+
+/* PERSONA */
+
+.select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: #0c1c2f;
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+/* TRANSCRIPT */
+
+.transcript {
+    margin-top: 18px;
+    display: none;
+}
+
+.transcript-box {
+    max-height: 190px;
+    overflow-y: auto;
+    color: #b7c9db;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.user-line {
+    padding: 9px 12px;
+    background: rgba(56,217,255,.05);
+    border-left: 2px solid var(--cyan);
+    border-radius: 7px;
+    margin-bottom: 8px;
+}
+
+.ai-line {
+    padding: 9px 12px;
+    background: rgba(156,108,255,.05);
+    border-left: 2px solid var(--purple);
+    border-radius: 7px;
+    margin-bottom: 8px;
+}
+
+/* REPORT */
+
+.report {
+    margin-top: 20px;
+    display: none;
+}
+
+.score-ring {
+    width: 145px;
+    height: 145px;
+    margin: 5px auto 15px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--teal) 0deg,
+        var(--cyan) 230deg,
+        rgba(255,255,255,.07) 230deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.score-ring::before {
+    content: "";
+    position: absolute;
+    width: 115px;
+    height: 115px;
+    background: #0c1b2c;
+    border-radius: 50%;
+}
+
+.score-number {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.score-number strong {
+    display: block;
+    font-size: 35px;
+}
+
+.score-number span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* RADAR-LIKE SKILLS */
+
+.skill-chart {
+    margin-top: 15px;
+}
+
+.skill-row {
+    margin-bottom: 12px;
+}
+
+.skill-row div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+/* BUTTON */
+
+.primary {
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 13px;
+    color: #06121d;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--cyan), var(--teal));
+    cursor: pointer;
+    margin-top: 18px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 1050px) {
+    .dashboard {
+        grid-template-columns: 210px 1fr;
+    }
+
+    .right-panel {
+        grid-column: 1 / -1;
+    }
+
+    .metrics {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width: 700px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .right-panel {
+        grid-column: auto;
+    }
+
+    .sidebar {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        display: block;
+    }
+
+    nav {
+        padding: 0 4%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+
+<nav>
+    <div class="logo">Prep<span>Talk</span></div>
+
+    <div class="nav-right">
+        <div class="badge">● AI INTERVIEWER ONLINE</div>
+        <div class="badge">LVL 07</div>
+    </div>
+</nav>
+
+<main class="container">
+
+    <section class="hero">
+        <div>
+            <h1>Practice like it's <span>the real thing.</span></h1>
+            <p>
+                Your AI interviewer listens, adapts and gives you
+                communication feedback after every answer.
+            </p>
+        </div>
+    </section>
+
+    <div class="dashboard">
+
+        <!-- LEFT PANEL -->
+
+        <aside class="sidebar">
+
+            <div class="card">
+                <div class="card-title">INTERVIEW MODE</div>
+
+                <button class="mode-btn active" onclick="setMode(this,'HR / Behavioral')">
+                    <span class="mode-icon">🧑‍💼</span>
+                    <span class="mode-name">HR / Behavioral</span>
+                    <div class="mode-desc">Experience & personality</div>
+                </button>
+
+                <button class="mode-btn" onclick="setMode(this,'Technical')">
+                    <span class="mode-icon">💻</span>
+                    <span class="mode-name">Technical</span>
+                    <div class="mode-desc">Role-specific questions</div>
+                </button>
+
+                <button class="mode-btn" onclick="setMode(this,'Case Study')">
+                    <span class="mode-icon">🧩</span>
+                    <span class="mode-name">Case Study</span>
+                    <div class="mode-desc">Problem solving</div>
+                </button>
+
+                <button class="mode-btn" onclick="setMode(this,'Stress Mode')">
+                    <span class="mode-icon">⚡</span>
+                    <span class="mode-name">Stress Mode</span>
+                    <div class="mode-desc">Rapid-fire questions</div>
+                </button>
+
+                <button class="mode-btn" onclick="setMode(this,'Salary Negotiation')">
+                    <span class="mode-icon">💰</span>
+                    <span class="mode-name">Negotiation</span>
+                    <div class="mode-desc">Salary practice</div>
+                </button>
+
+            </div>
+
+            <div class="card">
+                <div class="card-title">INTERVIEWER PERSONA</div>
+
+                <select class="select" id="persona" onchange="changePersona()">
+                    <option>Friendly</option>
+                    <option>Professional</option>
+                    <option>Strict / Pressure</option>
+                </select>
+
+                <div style="font-size:11px;color:#7189a1;margin-top:10px;line-height:1.5">
+                    The AI will adapt its tone and follow-up behavior to this persona.
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- CENTER INTERVIEW -->
+
+        <section class="card interview">
+
+            <div class="interview-top">
+                <div class="live">
+                    <span class="live-dot"></span>
+                    LIVE INTERVIEW
+                </div>
+
+                <div class="timer" id="timer">00:00</div>
+
+                <div class="timer">
+                    Question <b id="questionCount">1</b>/10
+                </div>
+            </div>
+
+            <div class="interviewer">
+
+                <div class="avatar">🤖</div>
+
+                <div class="persona" id="personaName">
+                    Alex — AI Interviewer
+                    <small>Friendly mode</small>
+                </div>
+
+                <div class="question" id="question">
+                    Tell me about yourself and walk me through your professional journey.
+                </div>
+
+            </div>
+
+            <div class="wave-wrap" id="wave">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <div class="controls">
+
+                <button class="control-btn" onclick="repeatQuestion()">
+                    🔊 Repeat
+                </button>
+
+                <button class="mic-btn" id="micButton" onclick="toggleRecording()">
+                    🎙️
+                </button>
+
+                <button class="control-btn" onclick="skipQuestion()">
+                    Skip →
+                </button>
+
+            </div>
+
+            <div class="status" id="status">
+                AI is ready. Click the microphone and answer naturally.
+            </div>
+
+            <div class="transcript" id="transcript">
+                <div class="card-title">LIVE TRANSCRIPT</div>
+                <div class="transcript-box" id="transcriptBox"></div>
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT PANEL -->
+
+        <aside class="right-panel">
+
+            <div class="card">
+
+                <div class="card-title">
+                    LIVE COMMUNICATION ANALYSIS
+                </div>
+
+                <div class="metrics">
+
+                    <div class="metric">
+                        <div class="metric-head">
+                            <span>Speaking Pace</span>
+                            <span id="paceValue">142 WPM</span>
+                        </div>
+                        <div class="progress">
+                            <i id="paceBar" style="width:82%"></i>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-head">
+                            <span>Clarity</span>
+                            <span id="clarityValue">86%</span>
+                        </div>
+                        <div class="progress">
+                            <i id="clarityBar" style="width:86%"></i>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-head">
+                            <span>Confidence</span>
+                            <span id="confidenceValue">78%</span>
+                        </div>
+                        <div class="progress">
+                            <i id="confidenceBar" style="width:78%"></i>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-head">
+                            <span>Relevance</span>
+                            <span id="relevanceValue">91%</span>
+                        </div>
+                        <div class="progress">
+                            <i id="relevanceBar" style="width:91%"></i>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-head">
+                            <span>Filler Words</span>
+                            <span id="fillerValue">3</span>
+                        </div>
+                        <div class="progress">
+                            <i id="fillerBar" style="width:25%"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card report">
+
+                <div class="card-title">
+                    SESSION PREVIEW
+                </div>
+
+                <div class="score-ring">
+                    <div class="score-number">
+                        <strong id="overallScore">84</strong>
+                        <span>OVERALL</span>
+                    </div>
+                </div>
+
+                <div class="skill-chart">
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Communication</span>
+                            <b>88%</b>
+                        </div>
+                        <div class="progress">
+                            <i style="width:88%"></i>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Confidence</span>
+                            <b>78%</b>
+                        </div>
+                        <div class="progress">
+                            <i style="width:78%"></i>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Structure</span>
+                            <b>83%</b>
+                        </div>
+                        <div class="progress">
+                            <i style="width:83%"></i>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Relevance</span>
+                            <b>91%</b>
+                        </div>
+                        <div class="progress">
+                            <i style="width:91%"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="primary" onclick="generateReport()">
+                    View AI Feedback
+                </button>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<script>
+
+/* ===========================
+   PREPTALK CORE ENGINE
+=========================== */
+
+let recognition;
+let recording = false;
+let seconds = 0;
+let timerInterval;
+let questionIndex = 1;
+let currentMode = "HR / Behavioral";
+let currentPersona = "Friendly";
+
+const questions = {
+
+    "HR / Behavioral": [
+        "Tell me about yourself and walk me through your professional journey.",
+        "Tell me about a time you worked with a difficult team member.",
+        "What is your greatest professional strength?",
+        "Tell me about a failure and what you learned from it.",
+        "Where do you see yourself in the next five years?"
+    ],
+
+    "Technical": [
+        "Explain a technical project that you are particularly proud of.",
+        "How would you design a scalable web application?",
+        "Explain the difference between SQL and NoSQL databases.",
+        "How would you debug a production issue?",
+        "Tell me about a difficult technical problem you solved."
+    ],
+
+    "Case Study": [
+        "A food delivery startup has seen a 20% decline in orders. How would you investigate the problem?",
+        "How would you improve the customer experience of an e-commerce platform?",
+        "Estimate how many cups of coffee are sold in India every day.",
+        "A product has low user retention. What would you analyze first?",
+        "How would you launch a new product in a competitive market?"
+    ],
+
+    "Stress Mode": [
+        "Why should we hire you?",
+        "That's not convincing. Give me a better answer.",
+        "What makes you better than the other candidates?",
+        "You have thirty seconds. Explain your biggest achievement.",
+        "Why did you leave your previous position?"
+    ],
+
+    "Salary Negotiation": [
+        "What salary range are you expecting?",
+        "Our budget is lower than your expectation. How would you respond?",
+        "Why do you believe you deserve that compensation?",
+        "Would you accept a lower salary for a better title?",
+        "What would make you walk away from this offer?"
+    ]
+};
+
+function startTimer() {
+
+    if(timerInterval) return;
+
+    timerInterval = setInterval(() => {
+
+        seconds++;
+
+        let min = String(Math.floor(seconds / 60)).padStart(2,"0");
+        let sec = String(seconds % 60).padStart(2,"0");
+
+        document.getElementById("timer").innerText =
+            `${min}:${sec}`;
+
+    },1000);
+}
+
+function speak(text) {
+
+    if(!("speechSynthesis" in window)) {
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    utterance.rate = currentPersona === "Strict / Pressure"
+        ? 1.15
+        : 0.95;
+
+    utterance.pitch = currentPersona === "Friendly"
+        ? 1.05
+        : .95;
+
+    utterance.volume = 1;
+
+    speechSynthesis.speak(utterance);
+
+    document.getElementById("status").innerText =
+        "🤖 AI interviewer is speaking...";
+
+}
+
+function initSpeechRecognition() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if(!SpeechRecognition) {
+
+        document.getElementById("status").innerText =
+            "Speech recognition is not supported. Please use Chrome or Edge.";
+
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+
+        recording = true;
+
+        document.getElementById("micButton")
+            .classList.add("recording");
+
+        document.getElementById("wave")
+            .classList.add("listening");
+
+        document.getElementById("status").innerText =
+            "🎤 Listening... Speak naturally.";
+
+        startTimer();
+    };
+
+    recognition.onresult = (event) => {
+
+        let text = "";
+
+        for(let i = event.resultIndex;
+            i < event.results.length;
+            i++) {
+
+            text += event.results[i][0].transcript;
+        }
+
+        document.getElementById("status").innerText =
+            "🧠 Analyzing your answer...";
+
+        if(event.results[event.results.length-1].isFinal) {
+
+            processAnswer(text);
+        }
+    };
+
+    recognition.onerror = (event) => {
+
+        console.log(event.error);
+
+        stopRecording();
+
+        document.getElementById("status").innerText =
+            "Microphone error. Try again.";
+    };
+
+    recognition.onend = () => {
+
+        stopRecording();
+    };
+}
+
+function toggleRecording() {
+
+    if(!recognition) {
+        initSpeechRecognition();
+    }
+
+    if(recording) {
+
+        recognition.stop();
+
+    } else {
+
+        try {
+            recognition.start();
+        } catch(e) {}
+    }
+}
+
+function stopRecording() {
+
+    recording = false;
+
+    document.getElementById("micButton")
+        .classList.remove("recording");
+
+    document.getElementById("wave")
+        .classList.remove("listening");
+}
+
+function processAnswer(text) {
+
+    stopRecording();
+
+    if(!text || text.length < 2) return;
+
+    addTranscript(text);
+
+    analyzeAnswer(text);
+
+    setTimeout(() => {
+
+        if(questionIndex < 10) {
+
+            questionIndex++;
+
+            document.getElementById("questionCount")
+                .innerText = questionIndex;
+
+            const nextQuestion =
+                generateAIQuestion(text);
+
+            document.getElementById("question")
+                .style.opacity = 0;
+
+            setTimeout(() => {
+
+                document.getElementById("question")
+                    .innerText = nextQuestion;
+
+                document.getElementById("question")
+                    .style.opacity = 1;
+
+                speak(nextQuestion);
+
+            },300);
+
+        } else {
+
+            finishInterview();
+        }
+
+    },1300);
+}
+
+/* AI-style adaptive question engine */
+
+function generateAIQuestion(answer) {
+
+    const words = answer.toLowerCase();
+
+    let followUp;
+
+    if(words.includes("project") ||
+       words.includes("built") ||
+       words.includes("developed")) {
+
+        followUp =
+            "Interesting. What was the most challenging part of that project, and how did you personally solve it?";
+
+    } else if(words.includes("team") ||
+              words.includes("manager")) {
+
+        followUp =
+            "What did you learn from that team experience, and how would you handle a similar situation today?";
+
+    } else if(words.includes("failure") ||
+              words.includes("mistake")) {
+
+        followUp =
+            "How did that experience change the way you approach problems today?";
+
+    } else {
+
+        followUp =
+            questions[currentMode][
+                (questionIndex - 1) %
+                questions[currentMode].length
+            ];
+    }
+
+    return followUp;
+}
+
+/* Communication analysis */
+
+function analyzeAnswer(text) {
+
+    const words = text.trim().split(/\s+/).length;
+
+    const fillerMatches =
+        text.match(/\b(um|uh|like|basically|actually|you know)\b/gi) || [];
+
+    const fillerCount = fillerMatches.length;
+
+    const durationMinutes = Math.max(seconds / 60, .1);
+
+    const wpm =
+        Math.round(words / durationMinutes);
+
+    const clarity =
+        Math.min(
+            98,
+            Math.max(
+                55,
+                95 - fillerCount * 5
+            )
+        );
+
+    const confidence =
+        Math.min(
+            95,
+            Math.max(
+                55,
+                70 + Math.random()*22
+            )
+        );
+
+    const relevance =
+        Math.min(
+            98,
+            72 + Math.random()*25
+        );
+
+    updateMetric(
+        "paceValue",
+        "paceBar",
+        `${wpm} WPM`,
+        Math.min(100, Math.max(20,
+            100 - Math.abs(140-wpm)*.7))
+    );
+
+    updateMetric(
+        "clarityValue",
+        "clarityBar",
+        `${Math.round(clarity)}%`,
+        clarity
+    );
+
+    updateMetric(
+        "confidenceValue",
+        "confidenceBar",
+        `${Math.round(confidence)}%`,
+        confidence
+    );
+
+    updateMetric(
+        "relevanceValue",
+        "relevanceBar",
+        `${Math.round(relevance)}%`,
+        relevance
+    );
+
+    document.getElementById("fillerValue")
+        .innerText = fillerCount;
+
+    document.getElementById("fillerBar")
+        .style.width =
+        Math.min(100, fillerCount*18) + "%";
+
+}
+
+function updateMetric(valueId, barId, value, percentage) {
+
+    document.getElementById(valueId)
+        .innerText = value;
+
+    document.getElementById(barId)
+        .style.width = percentage + "%";
+}
+
+function addTranscript(text) {
+
+    const box =
+        document.getElementById("transcriptBox");
+
+    document.getElementById("transcript")
+        .style.display = "block";
+
+    const div = document.createElement("div");
+
+    div.className = "user-line";
+
+    div.innerHTML =
+        `<b>You:</b> ${highlightFillers(text)}`;
+
+    box.appendChild(div);
+
+    box.scrollTop = box.scrollHeight;
+}
+
+function highlightFillers(text) {
+
+    return text.replace(
+        /\b(um|uh|like|basically|actually|you know)\b/gi,
+        `<span style="
+        color:#ff7387;
+        background:rgba(255,100,120,.12);
+        padding:2px 5px;
+        border-radius:4px;
+        ">$1</span>`
+    );
+}
+
+function repeatQuestion() {
+
+    const q =
+        document.getElementById("question").innerText;
+
+    speak(q);
+}
+
+function skipQuestion() {
+
+    if(questionIndex >= 10) {
+        finishInterview();
+        return;
+    }
+
+    questionIndex++;
+
+    document.getElementById("questionCount")
+        .innerText = questionIndex;
+
+    const q =
+        questions[currentMode][
+            (questionIndex-1) %
+            questions[currentMode].length
+        ];
+
+    document.getElementById("question")
+        .innerText = q;
+
+    speak(q);
+}
+
+function setMode(button, mode) {
+
+    document.querySelectorAll(".mode-btn")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+    currentMode = mode;
+
+    questionIndex = 1;
+
+    document.getElementById("questionCount")
+        .innerText = "1";
+
+    const q = questions[mode][0];
+
+    document.getElementById("question")
+        .innerText = q;
+
+    speak(q);
+}
+
+function changePersona() {
+
+    currentPersona =
+        document.getElementById("persona").value;
+
+    const name =
+        document.getElementById("personaName");
+
+    name.innerHTML =
+        `Alex — AI Interviewer
+        <small>${currentPersona} mode</small>`;
+
+    speak(
+        "Understood. I will now interview you in " +
+        currentPersona +
+        " mode."
+    );
+}
+
+function finishInterview() {
+
+    document.getElementById("status").innerText =
+        "✅ Interview complete. Generating your AI report...";
+
+    document.querySelector(".report")
+        .style.display = "block";
+
+    setTimeout(() => {
+
+        document.getElementById("status").innerText =
+            "🎉 Your interview report is ready.";
+
+    },1200);
+}
+
+function generateReport() {
+
+    alert(
+        "AI Feedback Report\n\n" +
+        "Communication: 88%\n" +
+        "Confidence: 78%\n" +
+        "Clarity: 86%\n" +
+        "Structure: 83%\n" +
+        "Relevance: 91%\n\n" +
+        "Tip: Reduce filler words and use the STAR structure for behavioral answers."
+    );
+}
+
+/* Initialize */
+
+window.onload = () => {
+
+    initSpeechRecognition();
+
+    setTimeout(() => {
+
+        speak(
+            document.getElementById("question")
+                .innerText
+        );
+
+    },800);
+};
+
+</script>
+
+</body>
+</html>
+```
